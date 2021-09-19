@@ -23,13 +23,13 @@ public class ConsumoService {
 		log.info("Chegou: " + dados);
 		
 		if (dados != null) {
-			Consumo consumo = new Consumo();
+			var consumo = new Consumo();
 			String[] dadosS = dados.split(",");
-			consumo.setData(new Date());
 			consumo.setPotencia(new BigDecimal(dadosS[0]));
 			consumo.setTemperatura(new BigDecimal(dadosS[1]));
 			consumo.setKwh(new BigDecimal(dadosS[2]));
 			consumo.setDispositivo(dadosS[3]);
+			consumo.setData(new Date(Long.parseLong(dadosS[4])));
 			consumoRepository.save(consumo);
 		}
 	}
