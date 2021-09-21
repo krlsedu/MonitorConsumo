@@ -13,24 +13,19 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name = "consumo", schema = "monitor_consumo")
-public class Consumo {
+@Table(name = "tarifa", schema = "monitor_consumo")
+public class Tarifa {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Lob
 	@Type(type = "org.hibernate.type.TextType")
-	private String dispositivo;
+	private String companhia;
 	
-	private Date data;
+	private Date dataInicioVigencia;
 	
-	private BigDecimal potencia;
+	private Date dataFimVigencia;
 	
-	private BigDecimal temperatura;
-	
-	@Column(name = "kwh", precision = 20, scale = 8)
-	private BigDecimal kwh;
-	
-	private Long intervaloDaLeitura;
+	private BigDecimal valorKwh;
 }

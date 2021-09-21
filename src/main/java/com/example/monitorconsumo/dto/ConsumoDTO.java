@@ -1,4 +1,4 @@
-package com.example.monitorconsumo.model;
+package com.example.monitorconsumo.dto;
 
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -12,9 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Entity
-@Table(name = "consumo", schema = "monitor_consumo")
-public class Consumo {
+public class ConsumoDTO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
