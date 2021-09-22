@@ -33,5 +33,6 @@ public class ConsumoService {
 			consumo.setIntervaloDaLeitura(Long.parseLong(dadosS[5]));
 			consumoRepository.save(consumo);
 		}
+		
 	}
 }
