@@ -21,6 +21,7 @@ public class ConsumoService {
 	public void salva(String dados) {
 		
 		log.info("Chegou: " + dados);
+		
 		if (dados != null) {
 			var consumo = new Consumo();
 			String[] dadosS = dados.split(",");
