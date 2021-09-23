@@ -25,8 +25,12 @@ public class ConsumoController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<String> create(
 			@RequestParam(value = "dados", required = false) String dados) {
-		consumoService.salva(dados);
-		return new ResponseEntity<>("ok", HttpStatus.OK);
+		try {
+			consumoService.salva(dados);
+			return new ResponseEntity<>("ok", HttpStatus.OK);
+		} catch (IllegalArgumentException e) {
+			return new ResponseEntity<>("OPS", HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@GetMapping(value = "/data-hora", produces = "text/plain")
