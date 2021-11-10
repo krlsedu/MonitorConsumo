@@ -36,5 +36,11 @@ pipeline {
         }
       }
     }
+    stage('Docker publish') {
+	  agent any
+	  steps {
+		sh 'docker-compose -H tcp://192.168.15.85:2375 up -d'
+	  }
+	}
   }
 }

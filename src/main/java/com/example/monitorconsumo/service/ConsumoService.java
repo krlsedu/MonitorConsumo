@@ -29,7 +29,8 @@ public class ConsumoService {
 				consumo.setTemperatura(new BigDecimal(dadosS[1]));
 				consumo.setKwh(new BigDecimal(dadosS[2]));
 				consumo.setDispositivo(dadosS[3]);
-				consumo.setData(new Date(Long.parseLong(dadosS[4])));
+				//consumo.setData(new Date(Long.parseLong(dadosS[4])));
+				consumo.setData(new Date());
 				consumo.setIntervaloDaLeitura(Long.parseLong(dadosS[5]));
 				return consumoRepository.save(consumo);
 			}

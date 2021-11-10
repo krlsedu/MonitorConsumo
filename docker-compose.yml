@@ -1,0 +1,47 @@
+version: '3'
+services:
+  db:
+    container_name: postgres_container
+    image: postgres:alpine
+    network_mode: bridge
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - monitorConsumo
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:snapshot
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "krlsedu@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "8082:80"
+    depends_on:
+      - db
+    networks:
+      - monitorConsumo
+  app:
+    container_name: monitor_consumo_container
+    image: krlsedu/monitor-consumo
+    network_mode: bridge
+    restart: always
+    ports:
+      - "80:8080"
+    networks:
+      - monitorConsumo
+    links:
+      - db
+    entrypoint: "java -Djava.security.egd=file:/dev/./urandom -jar MonitorConsumo.jar"
+    depends_on:
+      - db
+networks:
+  monitorConsumo:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:
