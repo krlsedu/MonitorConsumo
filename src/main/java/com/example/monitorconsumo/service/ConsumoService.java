@@ -31,7 +31,7 @@ public class ConsumoService {
                 BigDecimal potencia = consumo.getPotencia().subtract(new BigDecimal(300));
 
                 if (potencia.compareTo(BigDecimal.ZERO) < 0) {
-                    consumo.setPotencia(BigDecimal.ZERO);
+                    potencia = BigDecimal.ZERO;
                 }
 
                 long intervaloDaLeitura = Long.parseLong(dadosS[5]);
@@ -41,8 +41,8 @@ public class ConsumoService {
                         .divide(new BigDecimal(intervaloDaLeitura), RoundingMode.HALF_UP)
                         .divide(new BigDecimal(1000), RoundingMode.HALF_UP);
 
+                consumo.setPotencia(potencia);
                 consumo.setTemperatura(new BigDecimal(dadosS[1]));
-
                 consumo.setKwh(kwh);
                 consumo.setDispositivo(dadosS[3]);
                 //consumo.setData(new Date(Long.parseLong(dadosS[4])));
