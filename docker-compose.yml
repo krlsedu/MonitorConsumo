@@ -1,47 +1,64 @@
 version: '3'
 services:
   db:
-    container_name: postgres_container
+    container_name: postgres_monitorconsumo
+    hostname: postgres_monitorconsumo
     image: postgres:alpine
-    network_mode: bridge
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
     networks:
-      - monitorConsumo
+      - monitorconsumo_network
+    volumes:
+      - postgres:/var/lib/postgresql/data
   pgadmin:
-    container_name: pgadmin_container
+    container_name: pgadmin_monitorconsumo
+    hostname: pgadmin_monitorconsumo
     image: dpage/pgadmin4:snapshot
     environment:
       PGADMIN_DEFAULT_EMAIL: "krlsedu@gmail.com"
       PGADMIN_DEFAULT_PASSWORD: "admin"
     ports:
-      - "8082:80"
+      - "8081:80"
     depends_on:
       - db
     networks:
-      - monitorConsumo
+      - monitorconsumo_network
   app:
     container_name: monitor_consumo_container
     image: krlsedu/monitor-consumo
-    network_mode: bridge
     restart: always
     ports:
-      - "80:8080"
+      - "8080:8080"
     networks:
-      - monitorConsumo
+      - monitorconsumo_network
     links:
       - db
-    entrypoint: "java -Djava.security.egd=file:/dev/./urandom -jar MonitorConsumo.jar"
+    entrypoint: "java -Djava.security.egd=file:/dev/./urandom -jar app.jar"
     depends_on:
       - db
+  grafana:
+    image: grafana/grafana:main-ubuntu
+    container_name: grafana_monitorconsumo
+    hostname: grafana_monitorconsumo
+    networks:
+      - monitorconsumo_network
+    ports:
+      - "8082:3000"
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+    volumes:
+      - grafana-data:/var/lib/grafana
+    restart: unless-stopped
 networks:
-  monitorConsumo:
-    driver: bridge
+  monitorconsumo_network:
+
 
 volumes:
   postgres:
+    driver: local
   pgadmin:
+    driver: local
+  grafana-data:
+    driver: local
