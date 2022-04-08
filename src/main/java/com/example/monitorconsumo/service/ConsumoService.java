@@ -36,10 +36,14 @@ public class ConsumoService {
 
                 long intervaloDaLeitura = Long.parseLong(dadosS[5]);
 
-                BigDecimal kwh = potencia.divide(new BigDecimal(1000), 10, RoundingMode.HALF_UP)
-                        .divide(new BigDecimal(3600), 10, RoundingMode.HALF_UP)
-                        .divide(new BigDecimal(intervaloDaLeitura), 10, RoundingMode.HALF_UP)
-                        .divide(new BigDecimal(1000), 10, RoundingMode.HALF_UP);
+                BigDecimal potenciaKw = potencia.divide(new BigDecimal(1000), 10, RoundingMode.HALF_UP);
+                BigDecimal kwh = potenciaKw.divide(
+                        new BigDecimal(3600).divide(
+                                new BigDecimal(intervaloDaLeitura).divide(
+                                        new BigDecimal(1000)
+                                        , 10, RoundingMode.HALF_UP)
+                                , 10, RoundingMode.HALF_UP)
+                        , 10, RoundingMode.HALF_UP);
 
                 consumo.setPotencia(potencia);
                 consumo.setTemperatura(new BigDecimal(dadosS[1]));
