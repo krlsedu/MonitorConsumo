@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name = "consumo", schema = "monitor_consumo", indexes = {@Index(name = "idx_consumo_data", columnList = "data")})
+@Table(name = "consumo", schema = "public", indexes = {@Index(name = "idx_consumo_data", columnList = "data")})
 public class Consumo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
