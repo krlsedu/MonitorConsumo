@@ -28,7 +28,7 @@ public class ConsumoService {
                 String[] dadosS = dados.split(",");
                 consumo.setPotencia(new BigDecimal(dadosS[0]));
 
-                BigDecimal potencia = consumo.getPotencia().subtract(new BigDecimal(400));
+                BigDecimal potencia = consumo.getPotencia().subtract(new BigDecimal(600));
 
                 if (potencia.compareTo(BigDecimal.ZERO) < 0) {
                     potencia = BigDecimal.ZERO;
