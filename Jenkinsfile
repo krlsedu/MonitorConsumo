@@ -175,29 +175,19 @@ pipeline {
                                     url: 'https://gtw.csctracker.com/notify-sync/message'
                         }
                     } else {
-                        withCredentials([usernamePassword(credentialsId: 'developHost', passwordVariable: 'password', usernameVariable: 'user')]) {
-                            script {
-                                echo "Update remote"
-                                def remote = [:]
-                                remote.name = 'DevelopHost'
-                                remote.host = env.DEVELOP_HOST_IP
-                                remote.user = env.user
-                                remote.port = 22
-                                remote.password = env.password
-                                remote.allowAnyHosts = true
-                                sshCommand remote: remote, command: "docker service update --image krlsedu/" + env.IMAGE_NAME + ":" + env.VERSION_NAME + " " + env.SERVICE_NAME
-                            }
-                        }
                         withCredentials([string(credentialsId: 'csctracker_token', variable: 'token_csctracker')]) {
-                            httpRequest acceptType: 'APPLICATION_JSON',
-                                    contentType: 'APPLICATION_JSON',
-                                    httpMode: 'POST', quiet: true,
-                                    requestBody: '''{
+                            script {
+                                sh 'docker service update --image krlsedu/' + env.IMAGE_NAME + ':' + env.VERSION_NAME + ' ' + env.SERVICE_NAME
+                                httpRequest acceptType: 'APPLICATION_JSON',
+                                        contentType: 'APPLICATION_JSON',
+                                        httpMode: 'POST', quiet: true,
+                                        requestBody: '''{
                                                        "app" : "Jenkins",
                                                        "text" : "The develop ''' + env.SERVICE_NAME + ''' has been successfully updated to version: ''' + env.VERSION_NAME + '''"
                                                     }''',
-                                    customHeaders: [[name: 'authorization', value: 'Bearer ' + env.token_csctracker]],
-                                    url: 'https://gtw.csctracker.com/notify-sync/message'
+                                        customHeaders: [[name: 'authorization', value: 'Bearer ' + env.token_csctracker]],
+                                        url: 'https://gtw.csctracker.com/notify-sync/message'
+                            }
                         }
                     }
                 }
