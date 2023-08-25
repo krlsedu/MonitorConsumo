@@ -203,7 +203,6 @@ pipeline {
                 }
             }
         }
-
         stage('Notificar fim de build') {
             agent any
             when {
