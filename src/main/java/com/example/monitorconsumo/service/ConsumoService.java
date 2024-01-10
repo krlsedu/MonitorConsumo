@@ -3,11 +3,14 @@ package com.example.monitorconsumo.service;
 import com.example.monitorconsumo.model.Consumo;
 import com.example.monitorconsumo.repository.ConsumoRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
+
+import static com.example.monitorconsumo.configs.CustomHttpTraceFilter.CORRELATION_ID_LOG_VAR_NAME;
 
 @Service
 @Slf4j
@@ -52,6 +55,7 @@ public class ConsumoService {
                 //consumo.setData(new Date(Long.parseLong(dadosS[4])));
                 consumo.setData(new Date());
                 consumo.setIntervaloDaLeitura(intervaloDaLeitura);
+                consumo.setRequestId(MDC.get(CORRELATION_ID_LOG_VAR_NAME));
                 return consumoRepository.save(consumo);
             }
         } catch (Exception e) {

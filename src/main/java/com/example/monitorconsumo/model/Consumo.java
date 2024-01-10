@@ -33,4 +33,8 @@ public class Consumo {
 	private BigDecimal kwh;
 	
 	private Long intervaloDaLeitura;
+
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    private String requestId;
 }
