@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>MonitorConsumo</artifactId>
-    <version>24.02.003</version>
+    <version>24.02.004</version>
     <name>MonitorConsumo</name>
     <description>MonitorConsumo</description>
     <properties>
