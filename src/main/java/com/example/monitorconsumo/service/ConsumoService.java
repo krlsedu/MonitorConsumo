@@ -2,7 +2,7 @@ package com.example.monitorconsumo.service;
 
 import com.example.monitorconsumo.model.Consumo;
 import com.example.monitorconsumo.repository.ConsumoRepository;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -10,7 +10,7 @@ import java.math.RoundingMode;
 import java.util.Date;
 
 @Service
-@Log4j2
+@Slf4j
 public class ConsumoService {
 
     private final ConsumoRepository consumoRepository;
