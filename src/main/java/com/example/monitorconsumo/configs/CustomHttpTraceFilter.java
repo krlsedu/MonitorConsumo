@@ -1,12 +1,13 @@
 package com.example.monitorconsumo.configs;
+
 import com.example.monitorconsumo.dto.HttpTraceDTO;
+import com.example.monitorconsumo.service.RequestInfo;
 import com.example.monitorconsumo.utils.EnvReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
@@ -21,14 +22,10 @@ import java.io.UnsupportedEncodingException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.UUID;
 
 @Component
 @Slf4j
 public class CustomHttpTraceFilter extends OncePerRequestFilter {
-
-    @Value("${spring.application.name}")
-    private String appName;
 
     public static final String CORRELATION_ID_HEADER_NAME = "x-correlation-id";
     public static final String CORRELATION_ID_LOG_VAR_NAME = "correlationId";
@@ -53,14 +50,9 @@ public class CustomHttpTraceFilter extends OncePerRequestFilter {
 
 
         if (Arrays.stream(notLogUrls).noneMatch(request.getRequestURL().toString()::contains)) {
-            String correlationId = request.getHeader(CORRELATION_ID_HEADER_NAME);
-
-            if (correlationId == null) {
-                correlationId = UUID.randomUUID().toString();
-            }
-
-            MDC.put(CORRELATION_ID_LOG_VAR_NAME, correlationId);
-            MDC.put("appName", appName);
+            String appName = ApplicationInfo.getApplicationName();
+            String appVersion = ApplicationInfo.getApplicationVersion();
+            String correlationId = RequestInfo.getRequestId(appName);
 
             objectMapper.registerModule(new JavaTimeModule());
             objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -81,6 +73,8 @@ public class CustomHttpTraceFilter extends OncePerRequestFilter {
             httpTraceDTO.setArgs(request.getQueryString());
             httpTraceDTO.setStatus(response.getStatus());
             httpTraceDTO.setAppName(appName);
+            httpTraceDTO.setAppVersion(appVersion);
+            httpTraceDTO.setRequestId(correlationId);
 
             var logSuccesBody = "S".equalsIgnoreCase(EnvReader.readEnv("LOG_SUCCESS_BODY"));
             if (logSuccesBody) {
@@ -90,7 +84,9 @@ public class CustomHttpTraceFilter extends OncePerRequestFilter {
                 httpTraceDTO.setRequest(getContentAsString(wrappedRequest.getContentAsByteArray(),
                         this.maxPayloadLength, request.getCharacterEncoding()));
             }
+
             log.info(objectMapper.writeValueAsString(httpTraceDTO));
+
             MDC.remove(CORRELATION_ID_LOG_VAR_NAME);
 
             wrappedResponse.copyBodyToResponse();
