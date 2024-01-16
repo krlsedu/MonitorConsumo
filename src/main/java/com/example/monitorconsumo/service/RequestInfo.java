@@ -81,17 +81,19 @@ public class RequestInfo {
     }
 
     public static String getRequestId(String appName) {
-        var requestId = MDC.get(CORRELATION_ID_LOG_VAR_NAME);
+        String requestId = null;
+
+        try {
+            requestId = getHeader(CORRELATION_ID_HEADER_NAME);
+            if (requestId != null) {
+                MDC.put(CORRELATION_ID_LOG_VAR_NAME, requestId);
+            }
+        } catch (Exception e) {
+            // ignore
+        }
 
         if (requestId == null) {
-            try {
-                requestId = getHeader(CORRELATION_ID_HEADER_NAME);
-                if (requestId != null) {
-                    MDC.put(CORRELATION_ID_LOG_VAR_NAME, requestId);
-                }
-            } catch (Exception e) {
-                // ignore
-            }
+            requestId = MDC.get(CORRELATION_ID_LOG_VAR_NAME);
         }
 
         if (requestId == null) {
